@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "640578013649",
+    "project_id": "wallpaperapp-68c4d",
+    "storage_bucket": "wallpaperapp-68c4d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:640578013649:android:ec85d7a1b4a72cb0dff8f0",
+        "android_client_info": {
+          "package_name": "com.example.wallpaper_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDSh6i0Fl5y74-k9WdKyyVXyZCXQ4pcHYI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
