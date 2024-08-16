@@ -7,9 +7,8 @@ import 'package:wallpaper_app/screen/home_screen.dart';
 import 'package:wallpaper_app/screen/login_screen.dart';
 import 'package:wallpaper_app/screen/nature_image_screen.dart';
 import 'package:wallpaper_app/screen/signup_screen.dart';
-
-
 import 'firebase_options.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized() ;
@@ -34,8 +33,10 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: const HomeScreen()
+
     );
   }
 }
+
 
 

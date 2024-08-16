@@ -13,7 +13,8 @@ class _HomeScreenState extends State<HomeScreen> {
   int currentScreen = 0;
   final List<Widget> screens = [
     const CategorieScreen(),
-    const FavoritesScreen()
+    const FavoritesScreen(), 
+
   ];
 
   void _onTapScreen(int index) {
@@ -27,6 +28,8 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       body: screens[currentScreen],
       bottomNavigationBar: myNavigation(context),
+
+
     );
   }
 
@@ -55,7 +58,6 @@ class _HomeScreenState extends State<HomeScreen> {
       String iconPathSelected,
       ) {
     bool isSelected = currentScreen == index;
-
     return GestureDetector(
       onTap: () => _onTapScreen(index),
       child: Column(

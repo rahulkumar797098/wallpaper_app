@@ -1,12 +1,88 @@
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-class FullImageShow extends StatelessWidget {
+class FullImageShow extends StatefulWidget {
   final String imageUrl;
 
   const FullImageShow({super.key, required this.imageUrl});
+
+  @override
+  _FullImageShowState createState() => _FullImageShowState();
+}
+
+class _FullImageShowState extends State<FullImageShow> {
+  bool isFavorited = false;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkIfFavorited();
+  }
+
+  Future<void> _checkIfFavorited() async {
+    final user = _auth.currentUser;
+    if (user != null) {
+      final userId = user.uid;
+      final snapshot = await FirebaseFirestore.instance
+          .collection('favorites')
+          .doc(userId)
+          .collection('userFavorites')
+          .doc(widget.imageUrl)
+          .get();
+
+      setState(() {
+        isFavorited = snapshot.exists;
+      });
+    }
+  }
+
+  Future<void> _toggleFavorite() async {
+    final user = _auth.currentUser;
+    if (user != null) {
+      final userId = user.uid;
+      final favoritesRef = FirebaseFirestore.instance
+          .collection('favorites')
+          .doc(userId)
+          .collection('userFavorites');
+
+      if (isFavorited) {
+        await favoritesRef.doc(widget.imageUrl).delete();
+        await FirebaseStorage.instance
+            .ref('favourite_screen/${Uri.parse(widget.imageUrl).pathSegments.last}')
+            .delete(); // Delete the image from storage
+      } else {
+        final storageRef = FirebaseStorage.instance.ref('favourite_screen/${Uri.parse(widget.imageUrl).pathSegments.last}');
+        try {
+          await storageRef.putFile(await _downloadImageToFile(widget.imageUrl));
+          await favoritesRef.doc(widget.imageUrl).set({'url': widget.imageUrl});
+        } catch (e) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Failed to add image to favorites: $e')),
+          );
+        }
+      }
+
+      setState(() {
+        isFavorited = !isFavorited;
+      });
+    }
+  }
+
+  Future<File> _downloadImageToFile(String url) async {
+    var dio = Dio();
+    var dir = await getTemporaryDirectory();
+    String savePath = '${dir.path}/temp_image.jpg';
+    await dio.download(url, savePath);
+    return File(savePath);
+  }
 
   Future<void> downloadImage(BuildContext context) async {
     if (await Permission.storage.isGranted) {
@@ -32,7 +108,7 @@ class FullImageShow extends StatelessWidget {
       var dir = await getExternalStorageDirectory();
       if (dir != null) {
         String savePath = '${dir.path}/downloaded_image.jpg';
-        await dio.download(imageUrl, savePath);
+        await dio.download(widget.imageUrl, savePath);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Image downloaded to $savePath')),
         );
@@ -44,21 +120,13 @@ class FullImageShow extends StatelessWidget {
     }
   }
 
-
-  void _showPermissionDeniedDialog(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Storage permission is required to download images.')),
-    );
-  }
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         children: [
           Image.network(
-            imageUrl,
+            widget.imageUrl,
             height: double.infinity,
             width: double.infinity,
             fit: BoxFit.cover,
@@ -114,12 +182,10 @@ class FullImageShow extends StatelessWidget {
                     ),
                   ),
                   IconButton(
-                    onPressed: () {
-                      // Favorite functionality can be added here
-                    },
-                    icon: const Icon(
-                      Icons.favorite_border_rounded,
-                      color: Colors.white,
+                    onPressed: _toggleFavorite,
+                    icon: Icon(
+                      isFavorited ? Icons.favorite : Icons.favorite_border_rounded,
+                      color: isFavorited ? Colors.red : Colors.white,
                       shadows: [Shadow(color: Colors.black87, blurRadius: 4, offset: Offset(2.0, 2.0))],
                       size: 30,
                     ),

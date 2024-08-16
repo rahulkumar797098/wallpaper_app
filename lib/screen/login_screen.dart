@@ -61,12 +61,12 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Column(
           children: [
             SizedBox(
-              height: 620,
+              height: 650,
               child: Stack(
                 children: [
                   Container(
                     width: double.infinity,
-                    height: 600,
+                    height: 620,
                     decoration: const BoxDecoration(
                       borderRadius: BorderRadius.only(
                           bottomRight: Radius.circular(50),
@@ -82,12 +82,15 @@ class _LoginScreenState extends State<LoginScreen> {
                           Align(
                             alignment: Alignment.center,
                             child: Image.asset(
-                              "assets/images/computer.png",
+                              "assets/images/wallpaper (1).png",
                               height: 200,
                               width: 200,
                               alignment: Alignment.center,
                             ),
                           ),
+                          SizedBox(height: 20,),
+
+                          Text("Access Your Favorite Wallpapers" , style: TextStyle(fontWeight: FontWeight.bold , fontSize: 30),),
                           const SizedBox(height: 40),
                           TextField(
                             controller: emailController,

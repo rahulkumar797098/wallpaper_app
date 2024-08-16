@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -20,7 +19,8 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController passwordConfirmPasswordController = TextEditingController();
+  final TextEditingController passwordConfirmPasswordController =
+      TextEditingController();
 
   // Instance of AuthService
   final AuthService _authService = AuthService();
@@ -61,8 +61,7 @@ class _SignupScreenState extends State<SignupScreen> {
     } else {
       // Show error message if sign-up fails
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(result.toString())
-        ),
+        SnackBar(content: Text(result.toString())),
       );
     }
   }
@@ -75,12 +74,12 @@ class _SignupScreenState extends State<SignupScreen> {
         child: Column(
           children: [
             SizedBox(
-              height: 620,
+              height: 780,
               child: Stack(
                 children: [
                   Container(
                     width: double.infinity,
-                    height: 600,
+                    height: 750,
                     decoration: const BoxDecoration(
                       borderRadius: BorderRadius.only(
                           bottomRight: Radius.circular(50),
@@ -96,13 +95,22 @@ class _SignupScreenState extends State<SignupScreen> {
                           Align(
                             alignment: Alignment.center,
                             child: Image.asset(
-                              "assets/images/computer.png",
-                              height: 100,
+                              "assets/images/wallpaper.png",
+                              height: 200,
                               width: 200,
                               alignment: Alignment.center,
                             ),
                           ),
-                          const SizedBox(height: 40),
+                          const SizedBox(height: 30),
+                          const Text(
+                            "Sign Up to Explore Exclusive Wallpapers",
+                            style: TextStyle(fontSize: 30, color: Colors.white , fontWeight: FontWeight.bold , shadows: [Shadow(color: Colors.black , blurRadius: 2 , offset: Offset(2.0,2.0))]),
+
+                          ),
+
+                          SizedBox(
+                            height: 20,
+                          ),
                           // Name Box
                           TextField(
                             controller: nameController,
@@ -212,7 +220,8 @@ class _SignupScreenState extends State<SignupScreen> {
                           // Confirm Password
                           TextField(
                             controller: passwordConfirmPasswordController,
-                            obscureText: !isVisible, // Match visibility with password field
+                            obscureText:
+                                !isVisible, // Match visibility with password field
                             decoration: InputDecoration(
                               label: const Text(
                                 "Confirm Password",
@@ -257,7 +266,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     ),
                   ),
                   Positioned(
-                    bottom: 0,
+                    bottom: 10,
                     left: 100,
                     child: SizedBox(
                       width: 200,

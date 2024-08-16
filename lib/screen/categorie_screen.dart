@@ -28,45 +28,60 @@ class _CategorieScreenState extends State<CategorieScreen> {
       appBar: AppBar(
         backgroundColor: Colors.orangeAccent.shade100,
         shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-                bottomRight: Radius.circular(20),
-                bottomLeft: Radius.circular(20))),
-        title: const Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Icon(
-              Icons.menu,
-              size: 30,
-            ),
-            Icon(
-              Icons.account_circle,
-              size: 30,
-            ),
-          ],
+          borderRadius: BorderRadius.only(
+            bottomRight: Radius.circular(20),
+            bottomLeft: Radius.circular(20),
+          ),
         ),
+        title: const Text('Categories'),
+        leading: Builder(builder: (context) {
+          return IconButton(
+            icon: Icon(Icons.menu),
+            onPressed: () {
+              Scaffold.of(context).openDrawer();
+            },
+          );
+        }),
+        actions: [
+          const Icon(
+            Icons.account_circle,
+            size: 30,
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: GridView.builder(
           itemCount: catData.length,
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              childAspectRatio: 2 / 3.5,
-              crossAxisCount: 2,
-              crossAxisSpacing: 11,
-              mainAxisSpacing: 11),
+            childAspectRatio: 2 / 3.5,
+            crossAxisCount: 2,
+            crossAxisSpacing: 11,
+            mainAxisSpacing: 11,
+          ),
           itemBuilder: (context, index) => GestureDetector(
             onTap: () {
-              // Check if the selected category is "Cars & Vehicles"
               if (catData[index]["title"] == "Cars & Vehicles") {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const CarImageScreen()),
+                  MaterialPageRoute(
+                    builder: (context) => const CarImageScreen(),
+                  ),
                 );
-              } else if(catData[index]["title"] == "Nature"){
-                Navigator.push(context,MaterialPageRoute(builder: (context) => const NatureImageScreen()));
-              }
-              else if(catData[index]["title"] == "Animals"){
-                Navigator.push(context,MaterialPageRoute(builder: (context) => const AnimalImageScreen()));
+              } else if (catData[index]["title"] == "Nature") {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const NatureImageScreen(),
+                  ),
+                );
+              } else if (catData[index]["title"] == "Animals") {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const AnimalImageScreen(),
+                  ),
+                );
               }
             },
             child: Card(
@@ -79,7 +94,8 @@ class _CategorieScreenState extends State<CategorieScreen> {
                   Expanded(
                     child: ClipRRect(
                       borderRadius: const BorderRadius.vertical(
-                          top: Radius.circular(15)),
+                        top: Radius.circular(15),
+                      ),
                       child: Image.asset(
                         catData[index]["image"],
                         fit: BoxFit.cover,
@@ -101,6 +117,129 @@ class _CategorieScreenState extends State<CategorieScreen> {
               ),
             ),
           ),
+        ),
+      ),
+      drawer: Drawer(
+        child: ListView(
+          children: [
+            DrawerHeader(
+              child: Container(
+                child: Image.asset("assets/images/icon.png"),
+              ),
+            ),
+            ListTile(
+              leading: const Icon(
+                Icons.account_circle,
+                size: 30,
+                color: Colors.orange,
+              ),
+              title: const Text(
+                "Account",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: const Icon(
+                Icons.workspace_premium_rounded,
+                size: 30,
+                color: Colors.orange,
+              ),
+              title: const Text(
+                "premium membership",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: const Icon(
+                Icons.file_download_rounded,
+                size: 30,
+                color: Colors.orange,
+              ),
+              title: const Text(
+                "Download",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: const Icon(
+                Icons.settings,
+                size: 30,
+                color: Colors.orange,
+              ),
+              title: const Text(
+                "Setting",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: const Icon(
+                Icons.support,
+                size: 30,
+                color: Colors.orange,
+              ),
+              title: const Text(
+                "Help",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: const Icon(
+                Icons.logout_rounded,
+                size: 30,
+                color: Colors.orange,
+              ),
+              title: const Text(
+                "Logout",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: const Icon(
+                Icons.exit_to_app,
+                size: 30,
+                color: Colors.orange,
+              ),
+              title: const Text(
+                "Exit",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: const Icon(
+                Icons.info_outline_rounded,
+                size: 30,
+                color: Colors.orange,
+              ),
+              title: const Text(
+                "About",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+          ],
         ),
       ),
     );
