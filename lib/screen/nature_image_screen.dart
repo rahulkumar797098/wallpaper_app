@@ -55,7 +55,7 @@ class _NatureImageScreenState extends State<NatureImageScreen> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => FullImageShow(
-                                    imageUrl: imageNature[index])));
+                                    imageUrls: imageNature , initialIndex: index,)));
                       },
                       child: Card(
                         shape: RoundedRectangleBorder(

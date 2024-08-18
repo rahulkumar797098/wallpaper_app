@@ -2,7 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:wallpaper_app/screen/animal_image_screen.dart';
 import 'package:wallpaper_app/screen/car_image_screen.dart';
+import 'package:wallpaper_app/screen/city_screen.dart';
 import 'package:wallpaper_app/screen/nature_image_screen.dart';
+import 'package:wallpaper_app/screen/space_screen.dart';
 
 class CategorieScreen extends StatefulWidget {
   const CategorieScreen({super.key});
@@ -42,8 +44,8 @@ class _CategorieScreenState extends State<CategorieScreen> {
             },
           );
         }),
-        actions: [
-          const Icon(
+        actions: const [
+          Icon(
             Icons.account_circle,
             size: 30,
           ),
@@ -80,6 +82,20 @@ class _CategorieScreenState extends State<CategorieScreen> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => const AnimalImageScreen(),
+                  ),
+                );
+              } else if (catData[index]["title"] == "Space") {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const SpaceScreen(),
+                  ),
+                );
+              }else if (catData[index]["title"] == "Cities & Architecture") {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const CityScreen( ),
                   ),
                 );
               }

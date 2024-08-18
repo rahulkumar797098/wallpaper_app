@@ -28,7 +28,6 @@ class _CarImageScreenState extends State<CarImageScreen> {
       final String downloadURL = await ref.getDownloadURL();
       urls.add(downloadURL);
     }
-
     setState(() {
       imageUrls = urls;
     });
@@ -50,11 +49,10 @@ class _CarImageScreenState extends State<CarImageScreen> {
         itemCount: imageUrls.length,
         itemBuilder: (context, index) => GestureDetector(
           onTap: () {
-            // Navigate to FullImageShow and pass the selected image URL
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => FullImageShow(imageUrl: imageUrls[index]),
+                builder: (context) => FullImageShow(imageUrls: imageUrls , initialIndex: index,),
               ),
             );
           },

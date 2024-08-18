@@ -9,9 +9,14 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class FullImageShow extends StatefulWidget {
-  final String imageUrl;
+  final List<String> imageUrls;
+  final int initialIndex;
 
-  const FullImageShow({super.key, required this.imageUrl});
+  const FullImageShow({
+    super.key,
+    required this.imageUrls,
+    this.initialIndex = 0,
+  });
 
   @override
   _FullImageShowState createState() => _FullImageShowState();
@@ -20,10 +25,12 @@ class FullImageShow extends StatefulWidget {
 class _FullImageShowState extends State<FullImageShow> {
   bool isFavorited = false;
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  late PageController _pageController;
 
   @override
   void initState() {
     super.initState();
+    _pageController = PageController(initialPage: widget.initialIndex);
     _checkIfFavorited();
   }
 
@@ -31,11 +38,13 @@ class _FullImageShowState extends State<FullImageShow> {
     final user = _auth.currentUser;
     if (user != null) {
       final userId = user.uid;
+      final currentImageUrl =
+      widget.imageUrls[_pageController.page?.toInt() ?? widget.initialIndex];
       final snapshot = await FirebaseFirestore.instance
           .collection('favorites')
           .doc(userId)
           .collection('userFavorites')
-          .doc(widget.imageUrl)
+          .doc(currentImageUrl)
           .get();
 
       setState(() {
@@ -48,21 +57,25 @@ class _FullImageShowState extends State<FullImageShow> {
     final user = _auth.currentUser;
     if (user != null) {
       final userId = user.uid;
+      final currentImageUrl =
+      widget.imageUrls[_pageController.page?.toInt() ?? widget.initialIndex];
       final favoritesRef = FirebaseFirestore.instance
           .collection('favorites')
           .doc(userId)
           .collection('userFavorites');
 
       if (isFavorited) {
-        await favoritesRef.doc(widget.imageUrl).delete();
+        await favoritesRef.doc(currentImageUrl).delete();
         await FirebaseStorage.instance
-            .ref('favourite_screen/${Uri.parse(widget.imageUrl).pathSegments.last}')
+            .ref(
+            'favourite_screen/${Uri.parse(currentImageUrl).pathSegments.last}')
             .delete(); // Delete the image from storage
       } else {
-        final storageRef = FirebaseStorage.instance.ref('favourite_screen/${Uri.parse(widget.imageUrl).pathSegments.last}');
+        final storageRef = FirebaseStorage.instance.ref(
+            'favourite_screen/${Uri.parse(currentImageUrl).pathSegments.last}');
         try {
-          await storageRef.putFile(await _downloadImageToFile(widget.imageUrl));
-          await favoritesRef.doc(widget.imageUrl).set({'url': widget.imageUrl});
+          await storageRef.putFile(await _downloadImageToFile(currentImageUrl));
+          await favoritesRef.doc(currentImageUrl).set({'url': currentImageUrl});
         } catch (e) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Failed to add image to favorites: $e')),
@@ -93,7 +106,8 @@ class _FullImageShowState extends State<FullImageShow> {
         _startDownload(context);
       } else if (status.isDenied || status.isPermanentlyDenied) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Storage permission is required to download images.')),
+          SnackBar(
+              content: Text('Storage permission is required to download images.')),
         );
         if (status.isPermanentlyDenied) {
           openAppSettings(); // Opens settings directly
@@ -108,7 +122,9 @@ class _FullImageShowState extends State<FullImageShow> {
       var dir = await getExternalStorageDirectory();
       if (dir != null) {
         String savePath = '${dir.path}/downloaded_image.jpg';
-        await dio.download(widget.imageUrl, savePath);
+        await dio.download(
+            widget.imageUrls[_pageController.page?.toInt() ?? widget.initialIndex],
+            savePath);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Image downloaded to $savePath')),
         );
@@ -125,11 +141,20 @@ class _FullImageShowState extends State<FullImageShow> {
     return Scaffold(
       body: Stack(
         children: [
-          Image.network(
-            widget.imageUrl,
-            height: double.infinity,
-            width: double.infinity,
-            fit: BoxFit.cover,
+          PageView.builder(
+            controller: _pageController,
+            itemCount: widget.imageUrls.length,
+            onPageChanged: (index) {
+              _checkIfFavorited(); // Check if the new image is favorited
+            },
+            itemBuilder: (context, index) {
+              return Image.network(
+                widget.imageUrls[index],
+                height: double.infinity,
+                width: double.infinity,
+                fit: BoxFit.cover,
+              );
+            },
           ),
           Positioned(
             left: 10,
@@ -166,7 +191,12 @@ class _FullImageShowState extends State<FullImageShow> {
                     icon: const Icon(
                       Icons.file_download_outlined,
                       color: Colors.white,
-                      shadows: [Shadow(color: Colors.black87, blurRadius: 4, offset: Offset(2.0, 2.0))],
+                      shadows: [
+                        Shadow(
+                            color: Colors.black87,
+                            blurRadius: 4,
+                            offset: Offset(2.0, 2.0))
+                      ],
                       size: 30,
                     ),
                   ),
@@ -177,16 +207,28 @@ class _FullImageShowState extends State<FullImageShow> {
                     icon: const Icon(
                       Icons.share,
                       color: Colors.white,
-                      shadows: [Shadow(color: Colors.black87, blurRadius: 4, offset: Offset(2.0, 2.0))],
+                      shadows: [
+                        Shadow(
+                            color: Colors.black87,
+                            blurRadius: 4,
+                            offset: Offset(2.0, 2.0))
+                      ],
                       size: 30,
                     ),
                   ),
                   IconButton(
                     onPressed: _toggleFavorite,
                     icon: Icon(
-                      isFavorited ? Icons.favorite : Icons.favorite_border_rounded,
+                      isFavorited
+                          ? Icons.favorite
+                          : Icons.favorite_border_rounded,
                       color: isFavorited ? Colors.red : Colors.white,
-                      shadows: [Shadow(color: Colors.black87, blurRadius: 4, offset: Offset(2.0, 2.0))],
+                      shadows: [
+                        Shadow(
+                            color: Colors.black87,
+                            blurRadius: 4,
+                            offset: Offset(2.0, 2.0))
+                      ],
                       size: 30,
                     ),
                   ),
@@ -197,7 +239,12 @@ class _FullImageShowState extends State<FullImageShow> {
                     icon: const Icon(
                       Icons.info_outline_rounded,
                       color: Colors.white,
-                      shadows: [Shadow(color: Colors.black87, blurRadius: 4, offset: Offset(2.0, 2.0))],
+                      shadows: [
+                        Shadow(
+                            color: Colors.black87,
+                            blurRadius: 4,
+                            offset: Offset(2.0, 2.0))
+                      ],
                       size: 30,
                     ),
                   ),

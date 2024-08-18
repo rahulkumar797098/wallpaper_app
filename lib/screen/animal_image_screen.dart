@@ -63,7 +63,7 @@ class _AnimalImageScreenState extends State<AnimalImageScreen> {
                       context,
                       MaterialPageRoute(
                           builder: (context) => FullImageShow(
-                              imageUrl: animalImage[index])));
+                              imageUrls: animalImage , initialIndex: index,)));
                 },
                 child: Card(
                   shape: RoundedRectangleBorder(
