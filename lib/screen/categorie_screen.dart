@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:wallpaper_app/screen/animal_image_screen.dart';
 import 'package:wallpaper_app/screen/car_image_screen.dart';
 import 'package:wallpaper_app/screen/city_screen.dart';
+import 'package:wallpaper_app/screen/dark_image_screen.dart';
 import 'package:wallpaper_app/screen/nature_image_screen.dart';
 import 'package:wallpaper_app/screen/space_screen.dart';
+import 'package:wallpaper_app/screen/technology_image_screen.dart';
 
 class CategorieScreen extends StatefulWidget {
   const CategorieScreen({super.key});
@@ -22,6 +24,7 @@ class _CategorieScreenState extends State<CategorieScreen> {
     {"title": "Space", "image": "assets/categorie/space.jpg"},
     {"title": "Cars & Vehicles", "image": "assets/categorie/car.jpg"},
     {"title": "Flowers & Plants", "image": "assets/categorie/flower.jpg"},
+    {"title": "Dark", "image": "assets/categorie/dark.jpg"},
   ];
 
   @override
@@ -38,17 +41,26 @@ class _CategorieScreenState extends State<CategorieScreen> {
         title: const Text('Categories'),
         leading: Builder(builder: (context) {
           return IconButton(
-            icon: Icon(Icons.menu),
+            icon: const Icon(Icons.menu),
             onPressed: () {
               Scaffold.of(context).openDrawer();
             },
           );
         }),
-        actions: const [
-          Icon(
-            Icons.account_circle,
-            size: 30,
+        actions:  [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            child: Container(
+              height: 40,
+              width: 40,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                image: const DecorationImage(
+                  image: AssetImage("assets/images/rahul.png"))
+                )
+              ),
           ),
+
         ],
       ),
       body: Padding(
@@ -98,6 +110,20 @@ class _CategorieScreenState extends State<CategorieScreen> {
                     builder: (context) => const CityScreen( ),
                   ),
                 );
+              }else if (catData[index]["title"] == "Dark") {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const DarkImageScreen( ),
+                  ),
+                );
+              }else if (catData[index]["title"] == "Technology") {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const TechnologyImageScreen(),
+                  ),
+                );
               }
             },
             child: Card(
@@ -139,9 +165,7 @@ class _CategorieScreenState extends State<CategorieScreen> {
         child: ListView(
           children: [
             DrawerHeader(
-              child: Container(
-                child: Image.asset("assets/images/icon.png"),
-              ),
+              child:  Image.asset("assets/images/icon.png"),
             ),
             ListTile(
               leading: const Icon(
