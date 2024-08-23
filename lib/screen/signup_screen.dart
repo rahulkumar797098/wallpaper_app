@@ -95,7 +95,7 @@ class _SignupScreenState extends State<SignupScreen> {
                           Align(
                             alignment: Alignment.center,
                             child: Image.asset(
-                              "assets/images/wallpaper.png",
+                              "assets/images/icon.png",
                               height: 200,
                               width: 200,
                               alignment: Alignment.center,

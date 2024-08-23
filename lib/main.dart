@@ -7,6 +7,7 @@ import 'package:wallpaper_app/screen/home_screen.dart';
 import 'package:wallpaper_app/screen/login_screen.dart';
 import 'package:wallpaper_app/screen/nature_image_screen.dart';
 import 'package:wallpaper_app/screen/signup_screen.dart';
+import 'package:wallpaper_app/screen/splash_screen.dart';
 import 'firebase_options.dart';
 
 
@@ -32,7 +33,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const LoginScreen()
+      home: const SplashScreen()
 
     );
   }
